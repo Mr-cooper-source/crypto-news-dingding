@@ -1,0 +1,32 @@
+name: deploy to cloudflare workers
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout Code
+          uses: actions/checkout@v4
+        - name: Configure wrangler.toml
+          run: |
+            cp wrangler.example.toml wrangler.toml
+            sed -i 's/DINGDING_ACCESS_TOKEN = ""/DINGDING_ACCESS_TOKEN = "${{ secrets.DINGDING_ACCESS_TOKEN }}"/' wrangler.toml
+            sed -i 's/DINGDING_SECRET_KEY = ""/DINGDING_SECRET_KEY = "${{ secrets.DINGDING_SECRET_KEY }}"/' wrangler.toml
+            sed -i 's/account_id = ""/account_id = "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}"/' wrangler.toml
+            sed -i 's/id = ""/id = "${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}"/' wrangler.toml
+        - name: Set up Node.js Environment
+          uses: actions/setup-node@v4
+          with:
+            node-version: "18"
+        - name: Install Dependencies
+          run: npm install
+        - name: Deploy to Cloudflare Workers
+          uses: cloudflare/wrangler-action@v3
+          with:
+            apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+            command: deploy --var VERSION:${{ github.sha }} --minify src/index.ts
