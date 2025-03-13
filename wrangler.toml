@@ -1,0 +1,17 @@
+name = "crypto-news-dingding"
+main = "src/index.ts"
+compatibility_date = "2024-10-16"
+compatibility_flags = [ "nodejs_compat" ]
+
+account_id = "d2116881105b779fdab3258385c0a3c3"
+
+[vars]
+DINGDING_ACCESS_TOKEN = "45f018f7500b7e959ae39f53ff4bc39e2f5010fa0574a4f62d42d75a19338532"
+DINGDING_SECRET_KEY = "SECba0b8d5716042d55138bce8f969ee1bb850c0aebf4c89af7f0a5f343d53fe786"
+
+[[kv_namespaces]]
+binding = "CRYPTO_NEWS_DINGDING_KV"
+id = "08ed08dfc7e045eaaf30a9b5881de577"
+
+[triggers]
+crons = ["*/1 * * * *"]
