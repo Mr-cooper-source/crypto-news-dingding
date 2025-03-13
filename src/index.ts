@@ -8,10 +8,20 @@ interface Env {
   DINGDING_SECRET_KEY: string
 }
 
-const app = new Hono()
+const app = new Hono();
+
+// ✅ 处理 HTTP 请求，防止 404
+app.get('/', (c) => {
+  return c.text('Hello from Cloudflare Worker!');
+});
+
+// ✅ 处理定时任务
 
 export default {
-  fetch: app.fetch,
+  async fetch(request: Request, env: Env): Promise<Response> {
+    return app.fetch(request);
+  },
+
   scheduled: async (_event: ScheduledEvent, env: Env, _ctx: Context) => {
     try {
       // 获取最新的快讯
